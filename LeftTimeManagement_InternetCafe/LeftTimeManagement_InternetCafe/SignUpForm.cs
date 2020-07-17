@@ -104,8 +104,36 @@ namespace LeftTimeManagement_InternetCafe
 
                 if (cmd1.ExecuteNonQuery() == 1)
                 {
+
+                    string sqlInsert = $"update member_info set remain=remain+{ 60} where id='{text_Id.Text}' ";
+
+                    MySqlCommand insertCmd = new MySqlCommand(sqlInsert, sqlconn);
+
+                    if (insertCmd.ExecuteNonQuery() == 1)
+                    {
+
+
+                        DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                        int year = dt.Year;
+                        int month = dt.Month;
+                        int day = dt.Day;
+
+                        //4. 날짜, 결제금액, 아이디, 이름 DB에 넣기
+                        string profitLog = $"insert into profit_data (dates,profit,id) values('{year }-{month}-{day}',{0},'{text_Id.Text}')";
+                        MySqlCommand profitLogCmd = new MySqlCommand(profitLog, sqlconn);
+
+                        if (profitLogCmd.ExecuteNonQuery() == 1) {; }//{ MessageBox.Show(AddTime.passTime + "시간 충전됐습니다."); this.Close(); }
+
+                        else { MessageBox.Show("실패"); }
+
+                        //this.Close();
+                    }
+
+
                     //Console.WriteLine("회원가입 성공");
                     MessageBox.Show("회원가입 성공");
+
+
 
                     this.Visible = false;
                     Form1 form1 = new Form1();
