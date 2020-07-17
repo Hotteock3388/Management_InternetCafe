@@ -85,6 +85,9 @@ namespace LeftTimeManagement_InternetCafe
                 PC1_LeftTime.Visible = true;
                 PC1_Name.Visible = true;
                 PC1_StopButton.Visible = true;
+
+
+
                 SignInForUseSeat.login[1]= false;
                 isUsing[1] = true;
                 usingSeat++;
@@ -99,13 +102,13 @@ namespace LeftTimeManagement_InternetCafe
                 MySqlCommand cmd = new MySqlCommand(name_time, sqlconn);
                 MySqlDataReader table = cmd.ExecuteReader();
 
-
-                //   MessageBox.Show(table["c"].ToString());
                 table.Read();
 
                 PC1_Name.Text = table["name__"].ToString();
-                //PC1_LeftTime.Text = table["remain"].ToString();
                 leftTimes[1] = int.Parse(table["remain"].ToString());
+
+
+
                 if(leftTimes[1] <= 0)
                 {
                     PC1_Stop();
@@ -137,63 +140,10 @@ namespace LeftTimeManagement_InternetCafe
         private void PC1_Stop()
         {
             PC1_StartButton.Visible = true;
-            //timer1.Stop();
             PC1_LeftTime.Visible = false;
             PC1_Name.Visible = false;
             PC1_StopButton.Visible = false;
-            isUsing[1] = false;
-            usingSeat--;
-            timer[1].Stop();
-
-
-
-            sqlconn = new MySqlConnection(constr);
-            sqlconn.Open();
-
-
-            string reduceTime = $"update member_info set remain=remain-{useTime[1]} where id='{usingUser[1]}' ";
-
-            MySqlCommand cmd = new MySqlCommand(reduceTime, sqlconn);
-
-
-            if (cmd.ExecuteNonQuery() == 1)
-            {
-                //MessageBox.Show("사용 종료!") ;
-            }
-            else
-            {
-                MessageBox.Show("실패!");
-            }
-
-            //2. 사용 종료를 눌렀을때, ID에 해당하는 유저의 시간을 사용한 시간만큼 깎기.
-
-
-
-            //5. DB에 아이디, 이름, 사용시간, 좌석번호, 날짜 넣기
-            DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-            int year = dt.Year;
-            int month = dt.Month;
-            int day = dt.Day;
-
-            if(useTime[1] < 0)
-            {
-                string useLog = $"insert into use_data (dates,id,seat_no,use_time) values('{year }-{month}-{day}', '{usingUser[1]}', {1},'{useTime[1].ToString()}')";
-
-                MySqlCommand uselogcmd = new MySqlCommand(useLog, sqlconn);
-
-                if (uselogcmd.ExecuteNonQuery() == 1)
-                {
-
-                    MessageBox.Show("사용 종료!!");
-                    usingUser[1] = "";
-
-                }
-            }
-            else
-            {
-                MessageBox.Show("사용 종료!!");
-            }
-            sqlconn.Close();
+            record_use_data(1);
         }
         private void UsingStatus_Load(object sender, EventArgs e)
         {
@@ -277,64 +227,10 @@ namespace LeftTimeManagement_InternetCafe
         private void PC2_Stop()
         {
             PC2_StartButton.Visible = true;
-
             PC2_LeftTime.Visible = false;
             PC2_Name.Visible = false;
-            PC2_StopButton.Visible = false;
-            isUsing[2] = false;
-            usingSeat--;
-            timer[2].Stop();
-
-
-            sqlconn = new MySqlConnection(constr);
-            sqlconn.Open();
-
-
-            string reduceTime = $"update member_info set remain=remain-{useTime[2]} where id='{usingUser[2]}' ";
-
-            MySqlCommand cmd = new MySqlCommand(reduceTime, sqlconn);
-
-
-            if (cmd.ExecuteNonQuery() == 1)
-            {
-                //MessageBox.Show("사용 종료!");
-            }
-            else
-            {
-
-                MessageBox.Show("실패!");
-            }
-
-            //2. 사용 종료를 눌렀을때, ID에 해당하는 유저의 시간을 사용한 시간만큼 깎기.
-
-
-
-            //5. DB에 아이디, 이름, 사용시간, 좌석번호, 날짜 넣기
-            DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-            int year = dt.Year;
-            int month = dt.Month;
-            int day = dt.Day;
-
-
-            if (useTime[2] < 0)
-            {
-
-                string useLog = $"insert into use_data (dates,id,seat_no,use_time) values('{year }-{month}-{day}', '{usingUser[2]}', {2},'{useTime[2]}')";
-
-                MySqlCommand uselogcmd = new MySqlCommand(useLog, sqlconn);
-
-                if (uselogcmd.ExecuteNonQuery() == 1)
-                {
-                    usingUser[2] = "";
-                    MessageBox.Show("완료!!");
-                }
-            }
-            else
-            {
-                MessageBox.Show("사용 종료!!");
-            }
-            sqlconn.Close();
-           
+            PC2_StopButton.Visible = false;         
+            record_use_data(2);
         }
         private void PC3_StartButton_Click(object sender, EventArgs e)
         {
@@ -398,63 +294,10 @@ namespace LeftTimeManagement_InternetCafe
         private void PC3_Stop()
         {
             PC3_StartButton.Visible = true;
-
             PC3_LeftTime.Visible = false;
             PC3_Name.Visible = false;
             PC3_StopButton.Visible = false;
-            isUsing[3] = false;
-            usingSeat--;
-            timer[3].Stop();
-
-
-            sqlconn = new MySqlConnection(constr);
-            sqlconn.Open();
-
-
-            string reduceTime = $"update member_info set remain=remain-{useTime[3]} where id='{usingUser[3]}' ";
-
-            MySqlCommand cmd = new MySqlCommand(reduceTime, sqlconn);
-
-
-            if (cmd.ExecuteNonQuery() == 1)
-            {
-                //MessageBox.Show("사용 종료!");
-            }
-            else
-            {
-                MessageBox.Show("실패!");
-            }
-
-            //2. 사용 종료를 눌렀을때, ID에 해당하는 유저의 시간을 사용한 시간만큼 깎기.
-
-
-
-            //5. DB에 아이디, 이름, 사용시간, 좌석번호, 날짜 넣기
-            DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-            int year = dt.Year;
-            int month = dt.Month;
-            int day = dt.Day;
-
-
-            if (useTime[3] < 0)
-            {
-                string useLog = $"insert into use_data (dates,id,seat_no,use_time) values('{year }-{month}-{day}', '{usingUser[3]}', {3},'{useTime[3].ToString()}')";
-
-                MySqlCommand uselogcmd = new MySqlCommand(useLog, sqlconn);
-
-                if (uselogcmd.ExecuteNonQuery() == 1)
-                {
-
-                    MessageBox.Show("사용 종료!!");
-                    usingUser[3] = "";
-
-                }
-            }
-            else
-            {
-                MessageBox.Show("사용 종료!!");
-            }
-            sqlconn.Close();
+            record_use_data(3);
         }
 
         private void PC4_StartButton_Click(object sender, EventArgs e)
@@ -521,60 +364,10 @@ namespace LeftTimeManagement_InternetCafe
         private void PC4_Stop()
         {
             PC4_StartButton.Visible = true;
-
             PC4_LeftTime.Visible = false;
             PC4_Name.Visible = false;
             PC4_StopButton.Visible = false;
-            isUsing[4] = false;
-            usingSeat--;
-            timer[4].Stop();
-
-
-            sqlconn = new MySqlConnection(constr);
-            sqlconn.Open();
-
-
-            string reduceTime = $"update member_info set remain=remain-{useTime[4]} where id='{usingUser[4]}' ";
-
-            MySqlCommand cmd = new MySqlCommand(reduceTime, sqlconn);
-
-
-            if (cmd.ExecuteNonQuery() == 1)
-            {
-                //MessageBox.Show("사용 종료!");
-            }
-            else
-            {
-                MessageBox.Show("실패!");
-            }
-
-            //2. 사용 종료를 눌렀을때, ID에 해당하는 유저의 시간을 사용한 시간만큼 깎기.
-
-
-
-            //5. DB에 아이디, 이름, 사용시간, 좌석번호, 날짜 넣기
-            DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-            int year = dt.Year;
-            int month = dt.Month;
-            int day = dt.Day;
-
-            if (useTime[4] < 0)
-            {
-                string useLog = $"insert into use_data (dates,id,seat_no,use_time) values('{year }-{month}-{day}', '{usingUser[4]}', {4},'{useTime[4]   }')";
-
-                MySqlCommand uselogcmd = new MySqlCommand(useLog, sqlconn);
-
-                if (uselogcmd.ExecuteNonQuery() == 1)
-                {
-                    usingUser[4] = "";
-                    MessageBox.Show("완료!!");
-                }
-                else
-                {
-                    MessageBox.Show("사용 종료!!");
-                }
-                sqlconn.Close();
-            }
+            record_use_data(4);
         }
 
         private void PC5_StartButton_Click(object sender, EventArgs e)
@@ -642,61 +435,10 @@ namespace LeftTimeManagement_InternetCafe
         private void PC5_Stop()
         {
             PC5_StartButton.Visible = true;
-
             PC5_LeftTime.Visible = false;
             PC5_Name.Visible = false;
             PC5_StopButton.Visible = false;
-            isUsing[5] = false;
-            usingSeat--;
-            timer[5].Stop();
-
-            sqlconn = new MySqlConnection(constr);
-            sqlconn.Open();
-
-
-            string reduceTime = $"update member_info set remain=remain-{useTime[5]} where id='{usingUser[5]}' ";
-
-            MySqlCommand cmd = new MySqlCommand(reduceTime, sqlconn);
-
-
-            if (cmd.ExecuteNonQuery() == 1)
-            {
-                //MessageBox.Show("사용 종료!");
-            }
-            else
-            {
-                MessageBox.Show("실패!");
-            }
-
-            //2. 사용 종료를 눌렀을때, ID에 해당하는 유저의 시간을 사용한 시간만큼 깎기.
-
-
-
-            //5. DB에 아이디, 이름, 사용시간, 좌석번호, 날짜 넣기
-            DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-            int year = dt.Year;
-            int month = dt.Month;
-            int day = dt.Day;
-
-            if (useTime[5] < 0)
-            {
-                string useLog = $"insert into use_data (dates,id,seat_no,use_time) values('{year }-{month}-{day}', '{usingUser[5]}', {5},'{useTime[5]}')";
-
-                MySqlCommand uselogcmd = new MySqlCommand(useLog, sqlconn);
-
-                if (uselogcmd.ExecuteNonQuery() == 1)
-                {
-                    usingUser[5] = "";
-                    MessageBox.Show("완료!!");
-                }
-                
-                else
-                {
-                    MessageBox.Show("사용 종료!!");
-                }
-                sqlconn.Close();
-            }
-
+            record_use_data(5);
             
         }
 
@@ -756,6 +498,9 @@ namespace LeftTimeManagement_InternetCafe
             
         }
 
+
+
+
         private void PC6_StopButton_Click(object sender, EventArgs e)
         {
             PC6_Stop();
@@ -768,46 +513,54 @@ namespace LeftTimeManagement_InternetCafe
             PC6_LeftTime.Visible = false;
             PC6_Name.Visible = false;
             PC6_StopButton.Visible = false;
-            isUsing[6] = false;
+
+            record_use_data(6);
+
+            
+        }
+
+
+
+
+        //사용기록 남기기
+        private void record_use_data(int index)
+        {
             usingSeat--;
-            timer[6].Stop();
+            timer[index].Stop();
+            isUsing[index] = false;
+
             sqlconn = new MySqlConnection(constr);
             sqlconn.Open();
 
 
-            string reduceTime = $"update member_info set remain=remain-{useTime[6]} where id='{usingUser[6]}' ";
+            string reduceTime = $"update member_info set remain=remain-{useTime[index]} where id='{usingUser[index]}' ";
 
             MySqlCommand cmd = new MySqlCommand(reduceTime, sqlconn);
 
 
             if (cmd.ExecuteNonQuery() == 1)
             {
-                //MessageBox.Show("사용 종료!");
+                //MessageBox.Show("사용 종료!") ;
             }
             else
             {
                 MessageBox.Show("실패!");
             }
 
-            //2. 사용 종료를 눌렀을때, ID에 해당하는 유저의 시간을 사용한 시간만큼 깎기.
-
-
-
-            //5. DB에 아이디, 이름, 사용시간, 좌석번호, 날짜 넣기
             DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
             int year = dt.Year;
             int month = dt.Month;
             int day = dt.Day;
 
-            if (useTime[6] < 0)
+            if (useTime[index] > 0)
             {
-                string useLog = $"insert into use_data (dates,id,seat_no,use_time) values('{year}-{month}-{day}', '{usingUser[6]}', {6},'{useTime[6]}')";
+                string useLog = $"insert into use_data (dates,id,seat_no,use_time) values('{year}-{month}-{day}', '{usingUser[index]}', {index},'{useTime[index]}')";
 
                 MySqlCommand uselogcmd = new MySqlCommand(useLog, sqlconn);
 
                 if (uselogcmd.ExecuteNonQuery() == 1)
                 {
-                    usingUser[6] = "";
+                    usingUser[index] = "";
                     MessageBox.Show("완료!!");
                 }
                 else
@@ -816,102 +569,59 @@ namespace LeftTimeManagement_InternetCafe
                 }
                 sqlconn.Close();
             }
-
-            
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if(isUsing[1] == true)
-            {
-
-                if (leftTimes[1] <= 0)
-                {
-                    PC1_Stop();
-                    MessageBox.Show("남은 시간이 없습니다!");
-                }
-
-                leftTimes[1]--;
-
-                PC1_LeftTime.Text = (leftTimes[1] / 3600 + ":" + (leftTimes[1] / 3600) % 60 + ":" + leftTimes[1] % 60);
-                useTime[1] += 1;
-            }
-            
+            timer_tick(1);
+            PC1_LeftTime.Text = (leftTimes[1] / 3600 + ":" + (leftTimes[1] / 3600) % 60 + ":" + leftTimes[1] % 60);
         }
         private void timer2_Tick(object sender, EventArgs e)
         {
-            if(isUsing[2] == true)
-            {
-                if (leftTimes[2] <= 0)
-                {
-                    PC2_Stop();
-                    MessageBox.Show("남은 시간이 없습니다!");
-
-                }
-                leftTimes[2]--;
-                PC2_LeftTime.Text = (leftTimes[2] / 3600 + ":" + (leftTimes[2] / 3600) % 60 + ":" + leftTimes[2] % 60);
-                useTime[2] += 1;
-            }
-            
+            timer_tick(2);
+            PC2_LeftTime.Text = (leftTimes[2] / 3600 + ":" + (leftTimes[2] / 3600) % 60 + ":" + leftTimes[2] % 60);
         }
         private void timer3_Tick(object sender, EventArgs e)
         {
-            if(isUsing[3] == true)
-                    
-                if (leftTimes[3] <= 0)
-                {
-                    PC3_Stop();
-                    MessageBox.Show("남은 시간이 없습니다!");
-
-                }
-               leftTimes[3]--;
-               PC3_LeftTime.Text = (leftTimes[3] / 3600 + ":" + (leftTimes[3] / 3600) % 60 + ":" + leftTimes[3] % 60);
-               useTime[3] += 1;
+            timer_tick(3);
+            PC3_LeftTime.Text = (leftTimes[3] / 3600 + ":" + (leftTimes[3] / 3600) % 60 + ":" + leftTimes[3] % 60);
         }
         private void timer4_Tick(object sender, EventArgs e)
         {
-            if (isUsing[4] == true)
-            {
-                if (leftTimes[4] <= 0)
-                {
-                    PC4_Stop();
-                    MessageBox.Show("남은 시간이 없습니다!");
-
-                }
-                leftTimes[4]--;
-                PC4_LeftTime.Text = (leftTimes[4] / 3600 + ":" + (leftTimes[4] / 3600) % 60 + ":" + leftTimes[4] % 60);
-                useTime[4] += 1;
-            }
+            timer_tick(4);
+            PC4_LeftTime.Text = (leftTimes[4] / 3600 + ":" + (leftTimes[4] / 3600) % 60 + ":" + leftTimes[4] % 60);
         }
         private void timer5_Tick(object sender, EventArgs e)
         {
-            if (isUsing[5] == true)
-            {
-                if (leftTimes[5] <= 0)
-                {
-                    timer[5].Stop();    
-                    PC5_Stop();
-                    MessageBox.Show("남은 시간이 없습니다!");
-                }
-
-                leftTimes[5]--;
-                PC5_LeftTime.Text = (leftTimes[5] / 3600 + ":" + (leftTimes[5] / 3600) % 60 + ":" + leftTimes[5] % 60); 
-                useTime[5] += 1;
-            }
+            timer_tick(5);
+            PC5_LeftTime.Text = (leftTimes[5] / 3600 + ":" + (leftTimes[5] / 3600) % 60 + ":" + leftTimes[5] % 60);
         }
         private void timer6_Tick(object sender, EventArgs e)
         {
-            if (isUsing[6] == true)
+            timer_tick(6);
+            PC6_LeftTime.Text = (leftTimes[6] / 3600 + ":" + (leftTimes[6] / 3600) % 60 + ":" + leftTimes[6] % 60);
+        }
+
+        private void timer_tick(int index)
+        {
+            if (isUsing[index] == true)
             {
-                if (leftTimes[6] <= 0)
+                if (leftTimes[index] <= 0)
                 {
-                    PC6_Stop();
                     MessageBox.Show("남은 시간이 없습니다!");
+                    switch (index)
+                    {
+                        case 1: PC1_Stop(); break;
+                        case 2: PC2_Stop(); break;
+                        case 3: PC3_Stop(); break;
+                        case 4: PC4_Stop(); break;
+                        case 5: PC5_Stop(); break;
+                        case 6: PC6_Stop(); break;
+                    }
                 }
 
-                leftTimes[6]--;
-                PC6_LeftTime.Text = (leftTimes[6] / 3600 + ":" + (leftTimes[6] / 3600) % 60 + ":" + leftTimes[6] % 60);
-                useTime[6] += 1;
+                leftTimes[index]--;
+                useTime[index] += 1;
             }
         }
     }
