@@ -63,7 +63,7 @@ namespace LeftTimeManagement_InternetCafe
             {
                 MessageBox.Show("패스워드를 입력해주세요!");
             }
-            else
+            else if(text_Adminpw.Text != "9876")
             {
                 MessageBox.Show("패스워드가 틀렸습니다!");
             }
